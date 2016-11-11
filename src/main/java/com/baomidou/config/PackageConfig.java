@@ -5,7 +5,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * 跟包相关的配置项
  *
- * @author YangHu
+ * @author YangHu, tangguo
  * @since 2016/8/30
  */
 public class PackageConfig {
@@ -15,6 +15,12 @@ public class PackageConfig {
      */
     @Parameter(defaultValue = "com.baomidou")
     private String parent;
+    
+    /**
+     * 父包模块名。
+     */
+    private String moduleName;
+    
     /**
      * Entity包名
      */
@@ -43,9 +49,21 @@ public class PackageConfig {
      */
     @Parameter(defaultValue = "mapper.xml")
     private String xml;
+    
+    /**
+     * Controller包名
+     */
+    @Parameter(defaultValue = "web")
+    private String controller;
 
     public String getParent() {
+    	if(moduleName != null && !"".equals(moduleName.trim()))
+    		return parent + "." + moduleName;
         return parent;
+    }
+    
+    public String getModuleName() {
+    	return moduleName;
     }
 
     public String getEntity() {
@@ -67,5 +85,8 @@ public class PackageConfig {
     public String getXml() {
         return xml;
     }
-
+    
+    public String getController() {
+    	return controller;
+    }
 }

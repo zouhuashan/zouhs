@@ -6,7 +6,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * 从数据库表到文件的命名策略
  *
- * @author YangHu
+ * @author YangHu, tangguo
  * @since 2016/8/30
  */
 public enum NamingStrategy {
@@ -73,15 +73,39 @@ public enum NamingStrategy {
         }
         return name.substring(idx + 1);
     }
+    
+    /**
+     * 去掉指定的前缀
+     * @param name
+     * @param prefix
+     * @return
+     */
+    public static String removePrefix(String name, String prefix) {
+    	if (StringUtils.isBlank(name)) {
+            return "";
+        }
+    	name = name.toLowerCase();  // 先全部转为小写字母，主要针对oracle
+        int idx = name.indexOf(ConstVal.UNDERLINE);
+        if(prefix != null && !"".equals(prefix.trim())) {
+    		if(name.matches("^" + prefix.toLowerCase() + ".*")) { // 判断是否有匹配的前缀，然后截取前缀
+    			idx = prefix.length() - 1;
+            }
+    	}
+        if (idx == -1) {
+            return name;
+        }
+        return name.substring(idx + 1);
+    }
 
     /**
      * 去掉下划线前缀且将后半部分转成驼峰格式
      *
      * @param name
+     * @param tablePrefix 
      * @return
      */
-    public static String removePrefixAndCamel(String name) {
-        return underlineToCamel(removePrefix(name));
+    public static String removePrefixAndCamel(String name, String tablePrefix) {
+        return underlineToCamel(removePrefix(name, tablePrefix));
     }
 
 }

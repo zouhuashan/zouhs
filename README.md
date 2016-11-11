@@ -71,3 +71,4 @@
     </dependencies>
 </plugin>
 
+  * 执行命令：mvn mybatisplus:generate

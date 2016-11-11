@@ -3,6 +3,7 @@ package com.baomidou;
 import com.baomidou.config.DataSourceConfig;
 import com.baomidou.config.PackageConfig;
 import com.baomidou.config.StrategyConfig;
+import com.baomidou.config.TemplateConfig;
 import com.baomidou.config.builder.ConfigBuilder;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.logging.Log;
@@ -34,8 +35,13 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
      */
     @Parameter
     private PackageConfig packageInfo;
-
-
+    
+    /**
+     * 模板 相关配置
+     */
+    @Parameter
+    private TemplateConfig template;
+    
     /**
      * 生成文件的输出目录
      */
@@ -47,7 +53,13 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
      */
     @Parameter(defaultValue = "false")
     private boolean fileOverride;
-
+    
+    /**
+     * 是否打开输出目录
+     */
+    @Parameter(defaultValue = "true")
+    private boolean open;
+    
     /**
      * 是否在xml中添加二级缓存配置
      */
@@ -72,7 +84,7 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
      */
     protected void initConfig() {
         if (null == config) {
-            config = new ConfigBuilder(packageInfo, dataSource, strategy, outputDir);
+            config = new ConfigBuilder(packageInfo, dataSource, strategy, template, outputDir);
         }
     }
 
@@ -86,6 +98,10 @@ public abstract class AbstractGenerateMojo extends AbstractMojo {
 
     public boolean isFileOverride() {
         return fileOverride;
+    }
+    
+    public boolean isOpen() {
+    	return open;
     }
 
     public boolean isEnableCache() {

@@ -1,0 +1,16 @@
+package ${package.Controller};
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+/**
+ * ${table.comment}  前端控制器
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Controller
+@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityName.toLowerCase()}")
+public class ${table.controllerName} {
+	
+}

@@ -18,10 +18,10 @@ import com.baomidou.config.ConstVal;
 import com.baomidou.config.DataSourceConfig;
 import com.baomidou.config.PackageConfig;
 import com.baomidou.config.StrategyConfig;
+import com.baomidou.config.TemplateConfig;
 import com.baomidou.config.po.TableField;
 import com.baomidou.config.po.TableInfo;
 import com.baomidou.config.rules.DbType;
-import com.baomidou.config.rules.IdClassType;
 import com.baomidou.config.rules.IdStrategy;
 import com.baomidou.config.rules.NamingStrategy;
 import com.baomidou.config.rules.QuerySQL;
@@ -29,7 +29,7 @@ import com.baomidou.config.rules.QuerySQL;
 /**
  * 配置汇总 传递给文件生成工具
  *
- * @author YangHu
+ * @author YangHu, tangguo
  * @since 2016/8/30
  */
 public class ConfigBuilder {
@@ -42,10 +42,14 @@ public class ConfigBuilder {
      * SQL语句类型
      */
     private QuerySQL querySQL;
+    private String superEntityClass;
+    private String superMapperClass;
     /**
      * service超类定义
      */
-    private String superClass;
+    private String superServiceClass;
+    private String superServiceImplClass;
+    private String superControllerClass;
     /**
      * ID的字符串类型
      */
@@ -63,7 +67,11 @@ public class ConfigBuilder {
      * 路径配置信息
      */
     private Map<String, String> pathInfo;
-
+    
+    /**
+     * 模板路径配置信息
+     */
+    private TemplateConfig template;
 
     /**
      * 在构造器中处理配置
@@ -74,10 +82,11 @@ public class ConfigBuilder {
      * @param strategyConfig   表配置
      */
     public ConfigBuilder(PackageConfig packageConfig, DataSourceConfig dataSourceConfig,
-                         StrategyConfig strategyConfig, String outputDir) {
+                         StrategyConfig strategyConfig, TemplateConfig template, String outputDir) {
         handlerPackage(outputDir, packageConfig);
         handlerDataSource(dataSourceConfig);
         handlerStrategy(strategyConfig);
+        this.template = template;
     }
 
     //************************ 曝露方法 BEGIN*****************************
@@ -99,17 +108,33 @@ public class ConfigBuilder {
     public Map<String, String> getPathInfo() {
         return pathInfo;
     }
+    
+    public String getSuperEntityClass() {
+		return superEntityClass;
+	}
 
+	public String getSuperMapperClass() {
+		return superMapperClass;
+	}
+    
     /**
      * 获取超类定义
      *
      * @return 完整超类名称
      */
-    public String getSuperClass() {
-        return superClass;
+    public String getSuperServiceClass() {
+        return superServiceClass;
     }
+    
+	public String getSuperServiceImplClass() {
+		return superServiceImplClass;
+	}
 
-    /**
+	public String getSuperControllerClass() {
+		return superControllerClass;
+	}
+
+	/**
      * 获取ID类型
      *
      * @return id生成方式
@@ -126,6 +151,15 @@ public class ConfigBuilder {
     public List<TableInfo> getTableInfoList() {
         return tableInfoList;
     }
+    
+    /**
+     * 模板路径配置信息
+     * 
+     * @return 所以模板路径配置信息
+     */
+    public TemplateConfig getTemplate() {
+    	return template;
+    }
 
     //****************************** 曝露方法 END**********************************
 
@@ -136,18 +170,21 @@ public class ConfigBuilder {
      */
     private void handlerPackage(String outputDir, PackageConfig config) {
         packageInfo = new HashMap<String, String>();
+        packageInfo.put(ConstVal.MODULENAME, config.getModuleName());
         packageInfo.put(ConstVal.ENTITY, joinPackage(config.getParent(), config.getEntity()));
         packageInfo.put(ConstVal.MAPPER, joinPackage(config.getParent(), config.getMapper()));
         packageInfo.put(ConstVal.XML, joinPackage(config.getParent(), config.getXml()));
         packageInfo.put(ConstVal.SERIVCE, joinPackage(config.getParent(), config.getService()));
         packageInfo.put(ConstVal.SERVICEIMPL, joinPackage(config.getParent(), config.getServiceImpl()));
-
+        packageInfo.put(ConstVal.CONTROLLER, joinPackage(config.getParent(), config.getController()));
+        
         pathInfo = new HashMap<String, String>();
         pathInfo.put(ConstVal.ENTITY_PATH, joinPath(outputDir, packageInfo.get(ConstVal.ENTITY)));
         pathInfo.put(ConstVal.MAPPER_PATH, joinPath(outputDir, packageInfo.get(ConstVal.MAPPER)));
         pathInfo.put(ConstVal.XML_PATH, joinPath(outputDir, packageInfo.get(ConstVal.XML)));
         pathInfo.put(ConstVal.SERIVCE_PATH, joinPath(outputDir, packageInfo.get(ConstVal.SERIVCE)));
         pathInfo.put(ConstVal.SERVICEIMPL_PATH, joinPath(outputDir, packageInfo.get(ConstVal.SERVICEIMPL)));
+        pathInfo.put(ConstVal.CONTROLLER_PATH, joinPath(outputDir, packageInfo.get(ConstVal.CONTROLLER)));
     }
 
     /**
@@ -178,14 +215,28 @@ public class ConfigBuilder {
      */
     private void processTypes(StrategyConfig config) {
         if (StringUtils.isBlank(config.getSuperServiceClass())) {
-            if (IdClassType.longtype == config.getServiceIdType()) {
-                superClass = IdClassType.longtype.getPakageName();
-            } else {
-                superClass = IdClassType.stringtype.getPakageName();
-            }
+//            if (IdClassType.longtype == config.getServiceIdType()) {
+//                superServiceClass = IdClassType.longtype.getPakageName();
+//            } else {
+//                superServiceClass = IdClassType.stringtype.getPakageName();
+//            }
+        	// 针对2.x的修改
+        	superServiceClass = ConstVal.SUPERD_SERVICE_CLASS;
         } else {
-            superClass = config.getSuperServiceClass();
+            superServiceClass = config.getSuperServiceClass();
         }
+        if (StringUtils.isBlank(config.getSuperServiceImplClass())) {
+        	superServiceImplClass = ConstVal.SUPERD_SERVICEIMPL_CLASS;
+        } else {
+        	superServiceImplClass = config.getSuperServiceImplClass();
+        }
+        if (StringUtils.isBlank(config.getSuperMapperClass())) {
+        	superMapperClass= ConstVal.SUPERD_MAPPER_CLASS;
+        } else {
+        	superMapperClass = config.getSuperMapperClass();
+        }
+        superEntityClass = config.getSuperEntityClass();
+        superControllerClass = config.getSuperControllerClass();
 
         if (config.getIdGenType() == IdStrategy.auto) {
             idType = IdStrategy.auto.getValue();
@@ -204,15 +255,17 @@ public class ConfigBuilder {
      *
      * @param tableList 表名称
      * @param strategy  命名策略
+     * @param tablePrefix 
      * @return 补充完整信息后的表
      */
-    private List<TableInfo> processTable(List<TableInfo> tableList, NamingStrategy strategy) {
+    private List<TableInfo> processTable(List<TableInfo> tableList, NamingStrategy strategy, String tablePrefix) {
         for (TableInfo tableInfo : tableList) {
-            tableInfo.setEntityName(capitalFirst(processName(tableInfo.getName(), strategy)));
+            tableInfo.setEntityName(capitalFirst(processName(tableInfo.getName(), strategy, tablePrefix)));
             tableInfo.setMapperName(tableInfo.getEntityName() + ConstVal.MAPPER);
             tableInfo.setXmlName(tableInfo.getMapperName());
             tableInfo.setServiceName("I" + tableInfo.getEntityName() + ConstVal.SERIVCE);
             tableInfo.setServiceImplName(tableInfo.getEntityName() + ConstVal.SERVICEIMPL);
+            tableInfo.setControllerName(tableInfo.getEntityName() + ConstVal.CONTROLLER);
         }
         return tableList;
     }
@@ -231,6 +284,7 @@ public class ConfigBuilder {
         List<TableInfo> tableList = new ArrayList<TableInfo>();
         Set<String> notExistTables = new HashSet<String>();
         NamingStrategy strategy = config.getNaming();
+        NamingStrategy fieldStrategy = config.getFieldNaming();
         PreparedStatement pstate = null;
         try {
             pstate = connection.prepareStatement(querySQL.getTableCommentsSql());
@@ -263,7 +317,7 @@ public class ConfigBuilder {
                         tableInfo.setComment(tableComment);
                     }
                     if (StringUtils.isNotBlank(tableInfo.getName())) {
-                        List<TableField> fieldList = getListFields(tableInfo.getName(), strategy);
+                        List<TableField> fieldList = getListFields(tableInfo.getName(), fieldStrategy);
                         tableInfo.setFields(fieldList);
                         tableList.add(tableInfo);
                     }
@@ -293,7 +347,7 @@ public class ConfigBuilder {
                 e.printStackTrace();
             }
         }
-        return processTable(tableList, strategy);
+        return processTable(tableList, strategy, config.getTablePrefix());
     }
 
     /**
@@ -306,9 +360,8 @@ public class ConfigBuilder {
     private List<TableField> getListFields(String tableName, NamingStrategy strategy) throws SQLException {
         boolean havedId = false;
 
-        // 此处为了兼容Oracle查询语句， 参数格式的时候放两个tableName
         PreparedStatement pstate =
-                connection.prepareStatement(String.format(querySQL.getTableFieldsSql(), tableName, tableName));
+                connection.prepareStatement(String.format(querySQL.getTableFieldsSql(), tableName));
         ResultSet results = pstate.executeQuery();
 
         List<TableField> fieldList = new ArrayList<TableField>();
@@ -388,13 +441,24 @@ public class ConfigBuilder {
      * @return 根据策略返回处理后的名称
      */
     private String processName(String name, NamingStrategy strategy) {
+    	return processName(name, strategy, null);
+    }
+    
+    /**
+     * 处理字段名称
+     * @param name
+     * @param strategy
+     * @param tablePrefix
+     * @return 根据策略返回处理后的名称
+     */
+    private String processName(String name, NamingStrategy strategy, String tablePrefix) {
         String propertyName = "";
         if (strategy == NamingStrategy.remove_prefix_and_camel) {
-            propertyName = NamingStrategy.removePrefixAndCamel(name);
+            propertyName = NamingStrategy.removePrefixAndCamel(name, tablePrefix);
         } else if (strategy == NamingStrategy.underline_to_camel) {
             propertyName = NamingStrategy.underlineToCamel(name);
         } else if (strategy == NamingStrategy.remove_prefix) {
-            propertyName = NamingStrategy.removePrefix(name);
+            propertyName = NamingStrategy.removePrefix(name, tablePrefix);
         } else {
             propertyName = name;
         }
@@ -446,7 +510,12 @@ public class ConfigBuilder {
         } else if (t.contains("DATE") || t.contains("TIMESTAMP")) {
             return "Date";
         } else if (t.contains("NUMBER")) {
-            return "Double";
+			if (t.matches("NUMBER\\(+\\d{1}+\\)")) {
+				return "Integer";
+			} else if (t.matches("NUMBER\\(+\\d{2}+\\)")) {
+				return "Long";
+			}
+			return "Double";
         } else if (t.contains("FLOAT")) {
             return "Float";
         } else if (t.contains("BLOB")) {
@@ -480,8 +549,12 @@ public class ConfigBuilder {
      */
     private String capitalFirst(String name) {
         if (StringUtils.isNotBlank(name)) {
-            return name.substring(0, 1).toUpperCase() + name.substring(1);
+            //return name.substring(0, 1).toUpperCase() + name.substring(1);
+        	char[] array = name.toCharArray();
+            array[0] -= 32;
+            return String.valueOf(array);
         }
         return "";
     }
+    
 }

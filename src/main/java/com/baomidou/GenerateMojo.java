@@ -1,8 +1,18 @@
 package com.baomidou;
 
-import com.baomidou.config.ConstVal;
-import com.baomidou.config.builder.ConfigBuilder;
-import com.baomidou.config.po.TableInfo;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -11,13 +21,14 @@ import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.baomidou.config.ConstVal;
+import com.baomidou.config.TemplateConfig;
+import com.baomidou.config.builder.ConfigBuilder;
+import com.baomidou.config.po.TableInfo;
 
 /**
  * 生成文件
- * @author YangHu
+ * @author YangHu, tangguo
  * @since 2016/8/30
  */
 @Mojo(name = "generate", threadSafe = true)
@@ -27,6 +38,7 @@ public class GenerateMojo extends AbstractGenerateMojo {
      * velocity引擎
      */
     private VelocityEngine engine;
+    
     /**
      * 输出文件
      */
@@ -47,19 +59,21 @@ public class GenerateMojo extends AbstractGenerateMojo {
             batchOutput(ctx.getKey(), ctx.getValue());
         }
         //打开输出目录
-        try {
-            String osName = System.getProperty("os.name");
-            if (osName != null) {
-                if (osName.contains("Mac")) {
-                    Runtime.getRuntime().exec("open " + getOutputDir());
-                } else if (osName.contains("Windows")) {
-                    Runtime.getRuntime().exec("cmd /c start " + getOutputDir());
-                } else {
-                    log.info("文件输出目录:" + getOutputDir());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(isOpen()) {
+        	try {
+        		String osName = System.getProperty("os.name");
+        		if (osName != null) {
+        			if (osName.contains("Mac")) {
+        				Runtime.getRuntime().exec("open " + getOutputDir());
+        			} else if (osName.contains("Windows")) {
+        				Runtime.getRuntime().exec("cmd /c start " + getOutputDir());
+        			} else {
+        				log.info("文件输出目录:" + getOutputDir());
+        			}
+        		}
+        	} catch (IOException e) {
+        		e.printStackTrace();
+        	}
         }
         log.info("==========================文件生成完成！！！==========================");
     }
@@ -70,45 +84,68 @@ public class GenerateMojo extends AbstractGenerateMojo {
      * @param config 总配置信息
      * @return 解析数据结果集
      */
-    private Map<String, VelocityContext> analyzeData(ConfigBuilder config) {
-        List<TableInfo> tableList = config.getTableInfoList();
-        Map<String, String> packageInfo = config.getPackageInfo();
-        Map<String, VelocityContext> ctxData = new HashMap<String, VelocityContext>();
-        String superClass = config.getSuperClass().substring(config.getSuperClass().lastIndexOf(".") + 1);
-        String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	private Map<String, VelocityContext> analyzeData(ConfigBuilder config) {
+		List<TableInfo> tableList = config.getTableInfoList();
+		Map<String, String> packageInfo = config.getPackageInfo();
+		Map<String, VelocityContext> ctxData = new HashMap<String, VelocityContext>();
+		String superEntityClass = getSuperClassName(config.getSuperEntityClass());
+		String superMapperClass = getSuperClassName(config.getSuperMapperClass());
+		String superServiceClass = getSuperClassName(config.getSuperServiceClass());
+		String superServiceImplClass = getSuperClassName(config.getSuperServiceImplClass());
+		String superControllerClass = getSuperClassName(config.getSuperControllerClass());
+		String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-        for (TableInfo tableInfo : tableList) {
-            VelocityContext ctx = new VelocityContext();
-            ctx.put("package", packageInfo);
-            ctx.put("table", tableInfo);
-            ctx.put("entity", tableInfo.getEntityName());
-            ctx.put("idGenType", config.getIdType());
-            ctx.put("superClassPackage", config.getSuperClass());
-            ctx.put("superClass", superClass);
-            ctx.put("enableCache", isEnableCache());
-            ctx.put("author", getAuthor());
-            ctx.put("date", date);
-            ctxData.put(tableInfo.getEntityName(), ctx);
-        }
-        return ctxData;
-    }
+		for (TableInfo tableInfo : tableList) {
+			VelocityContext ctx = new VelocityContext();
+			ctx.put("package", packageInfo);
+			ctx.put("table", tableInfo);
+			ctx.put("entity", tableInfo.getEntityName());
+			ctx.put("idGenType", config.getIdType());
+			ctx.put("superEntityClassPackage", config.getSuperEntityClass());
+			ctx.put("superEntityClass", superEntityClass);
+			ctx.put("superMapperClassPackage", config.getSuperMapperClass());
+			ctx.put("superMapperClass", superMapperClass);
+			ctx.put("superServiceClassPackage", config.getSuperServiceClass());
+			ctx.put("superServiceClass", superServiceClass);
+			ctx.put("superServiceImplClassPackage", config.getSuperServiceImplClass());
+			ctx.put("superServiceImplClass", superServiceImplClass);
+			ctx.put("superControllerClassPackage", config.getSuperControllerClass());
+			ctx.put("superControllerClass", superControllerClass);
+			ctx.put("enableCache", isEnableCache());
+			ctx.put("author", getAuthor());
+			ctx.put("date", date);
+			ctxData.put(tableInfo.getEntityName(), ctx);
+		}
+		return ctxData;
+	}
 
     /**
-     * 处理输出目录
-     *
-     * @param pathInfo 路径信息
+     * 获取类名
+     * @param classPath
+     * @return
      */
-    private void mkdirs(Map<String, String> pathInfo) {
-        for (Map.Entry<String, String> entry : pathInfo.entrySet()) {
-            File dir = new File(entry.getValue());
-            if (!dir.exists()) {
-                boolean result = dir.mkdirs();
-                if (result) {
-                    log.info("创建目录： [" + entry.getValue() + "]");
-                }
-            }
-        }
-    }
+	private String getSuperClassName(String classPath) {
+		if (StringUtils.isBlank(classPath))
+			return null;
+		return classPath.substring(classPath.lastIndexOf(".") + 1);
+	}
+
+	/**
+	 * 处理输出目录
+	 *
+	 * @param pathInfo 路径信息
+	 */
+	private void mkdirs(Map<String, String> pathInfo) {
+		for (Map.Entry<String, String> entry : pathInfo.entrySet()) {
+			File dir = new File(entry.getValue());
+			if (!dir.exists()) {
+				boolean result = dir.mkdirs();
+				if (result) {
+					log.info("创建目录： [" + entry.getValue() + "]");
+				}
+			}
+		}
+	}
 
     /**
      * 初始化输出目录
@@ -121,6 +158,8 @@ public class GenerateMojo extends AbstractGenerateMojo {
         outputFiles.put(ConstVal.XML, pathInfo.get(ConstVal.XML_PATH) + ConstVal.XML_NAME);
         outputFiles.put(ConstVal.SERIVCE, pathInfo.get(ConstVal.SERIVCE_PATH) + ConstVal.SERVICE_NAME);
         outputFiles.put(ConstVal.SERVICEIMPL, pathInfo.get(ConstVal.SERVICEIMPL_PATH) + ConstVal.SERVICEIMPL_NAME);
+        outputFiles.put(ConstVal.SERVICEIMPL, pathInfo.get(ConstVal.SERVICEIMPL_PATH) + ConstVal.SERVICEIMPL_NAME);
+        outputFiles.put(ConstVal.CONTROLLER, pathInfo.get(ConstVal.CONTROLLER_PATH) + ConstVal.CONTROLLER_NAME);
     }
 
     /**
@@ -135,22 +174,28 @@ public class GenerateMojo extends AbstractGenerateMojo {
             String xmlFile = String.format(outputFiles.get(ConstVal.XML), entityName);
             String serviceFile = String.format(outputFiles.get(ConstVal.SERIVCE), entityName);
             String implFile = String.format(outputFiles.get(ConstVal.SERVICEIMPL), entityName);
-
+            String controllerFile = String.format(outputFiles.get(ConstVal.CONTROLLER), entityName);
+            
+            TemplateConfig template = config.getTemplate();
+            
             // 根据override标识来判断是否需要创建文件
             if (isCreate(entityFile)) {
-                vmToFile(context, ConstVal.TEMPLATE_ENTITY, entityFile);
+                vmToFile(context, template.getEntity(), entityFile);
             }
-            if (isCreate(mapperFile)) {
-                vmToFile(context, ConstVal.TEMPLATE_MAPPER, mapperFile);
-            }
-            if (isCreate(xmlFile)) {
-                vmToFile(context, ConstVal.TEMPLATE_XML, xmlFile);
-            }
-            if (isCreate(serviceFile)) {
-                vmToFile(context, ConstVal.TEMPLATE_SERVICE, serviceFile);
-            }
-            if (isCreate(implFile)) {
-                vmToFile(context, ConstVal.TEMPLATE_SERVICEIMPL, implFile);
+			if (isCreate(mapperFile)) {
+				vmToFile(context, template.getMapper(), mapperFile);
+			}
+			if (isCreate(xmlFile)) {
+				vmToFile(context, template.getXml(), xmlFile);
+			}
+			if (isCreate(serviceFile)) {
+				vmToFile(context, template.getService(), serviceFile);
+			}
+			if (isCreate(implFile)) {
+				vmToFile(context, template.getServiceImpl(), implFile);
+			}
+            if (isCreate(controllerFile)) {
+                vmToFile(context, template.getController(), controllerFile);
             }
         } catch (IOException e) {
             e.printStackTrace();
