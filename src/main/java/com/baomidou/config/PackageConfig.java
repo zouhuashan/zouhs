@@ -1,5 +1,6 @@
 package com.baomidou.config;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
@@ -87,6 +88,7 @@ public class PackageConfig {
     }
     
     public String getController() {
+    	if(StringUtils.isBlank(controller)) return "web";
     	return controller;
     }
 }
