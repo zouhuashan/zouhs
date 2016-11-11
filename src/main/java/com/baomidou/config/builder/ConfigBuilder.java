@@ -1,21 +1,30 @@
 package com.baomidou.config.builder;
 
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.baomidou.config.ConstVal;
 import com.baomidou.config.DataSourceConfig;
 import com.baomidou.config.PackageConfig;
 import com.baomidou.config.StrategyConfig;
 import com.baomidou.config.po.TableField;
 import com.baomidou.config.po.TableInfo;
-import com.baomidou.config.rules.*;
-import javafx.scene.control.Tab;
-import org.apache.commons.lang.StringUtils;
-
-import java.io.File;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
+import com.baomidou.config.rules.DbType;
+import com.baomidou.config.rules.IdClassType;
+import com.baomidou.config.rules.IdStrategy;
+import com.baomidou.config.rules.NamingStrategy;
+import com.baomidou.config.rules.QuerySQL;
 
 /**
  * 配置汇总 传递给文件生成工具
