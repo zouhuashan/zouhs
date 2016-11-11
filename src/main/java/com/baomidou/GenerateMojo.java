@@ -31,7 +31,7 @@ import com.baomidou.config.po.TableInfo;
  * @author YangHu, tangguo
  * @since 2016/8/30
  */
-@Mojo(name = "generate", threadSafe = true)
+@Mojo(name = "code", threadSafe = true)
 public class GenerateMojo extends AbstractGenerateMojo {
 
     /**

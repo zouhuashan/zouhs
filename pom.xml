@@ -17,7 +17,7 @@
 			<organization>baomidou</organization>
 		</developer>
 	</developers>
-	<description>Mybatis-plus框架代码生成器</description>
+	<description>Mybatis-Plus Code Generator</description>
 
 	<licenses>
 		<license>
@@ -59,11 +59,6 @@
 			<version>1.7</version>
 		</dependency>
 		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-			<version>1.2.11</version>
-		</dependency>
-		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.38</version>
@@ -86,25 +81,10 @@
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>3.2</version>
 				<configuration>
-					<goalPrefix>mybatisplus</goalPrefix>
+					<goalPrefix>mp</goalPrefix>
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
 				</configuration>
-				<executions>
-					<execution>
-						<id>mojo-descriptor</id>
-						<goals>
-							<goal>descriptor</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>help-goal</id>
-						<goals>
-							<goal>helpmojo</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
-
 
 			<plugin>
 				<groupId>com.baomidou</groupId>
