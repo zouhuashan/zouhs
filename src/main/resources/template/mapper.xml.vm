@@ -6,6 +6,16 @@
 <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
 #end
 
+	<resultMap id="BaseResultMap" type="${package.Entity}.${entity}">
+#foreach($field in ${table.fields})
+#if(${field.keyFlag})
+		<id column="${field.name}" property="${field.propertyName}" />
+#else
+		<result column="${field.name}" property="${field.propertyName}" />
+#end
+#end
+	</resultMap>
+	
     <!-- 通用查询结果列-->
     <sql id="Base_Column_List">
         ${table.fieldNames}
