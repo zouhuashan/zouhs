@@ -260,7 +260,7 @@ public class ConfigBuilder {
      */
     private List<TableInfo> processTable(List<TableInfo> tableList, NamingStrategy strategy, String tablePrefix) {
         for (TableInfo tableInfo : tableList) {
-            tableInfo.setEntityName(capitalFirst(processName(tableInfo.getName(), strategy, tablePrefix)));
+            tableInfo.setEntityName(NamingStrategy.capitalFirst(processName(tableInfo.getName(), strategy, tablePrefix)));
             tableInfo.setMapperName(tableInfo.getEntityName() + ConstVal.MAPPER);
             tableInfo.setXmlName(tableInfo.getMapperName());
             tableInfo.setServiceName("I" + tableInfo.getEntityName() + ConstVal.SERIVCE);
@@ -541,20 +541,5 @@ public class ConfigBuilder {
     }
 
 
-    /**
-     * 实体首字母大写
-     *
-     * @param name 待转换的字符串
-     * @return 转换后的字符串
-     */
-    private String capitalFirst(String name) {
-        if (StringUtils.isNotBlank(name)) {
-            //return name.substring(0, 1).toUpperCase() + name.substring(1);
-        	char[] array = name.toCharArray();
-            array[0] -= 32;
-            return String.valueOf(array);
-        }
-        return "";
-    }
     
 }
