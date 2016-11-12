@@ -82,7 +82,7 @@ public enum NamingStrategy {
         }
         int idx = name.indexOf(ConstVal.UNDERLINE);
         if(prefix != null && !"".equals(prefix.trim())) {
-    		if(name.matches("^" + prefix.toLowerCase() + ".*")) { // 判断是否有匹配的前缀，然后截取前缀
+    		if(name.toLowerCase().matches("^" + prefix.toLowerCase() + ".*")) { // 判断是否有匹配的前缀，然后截取前缀
     			idx = prefix.length() - 1;
             }
     	}

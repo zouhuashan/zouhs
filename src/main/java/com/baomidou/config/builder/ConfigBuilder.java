@@ -158,7 +158,7 @@ public class ConfigBuilder {
      * @return 所以模板路径配置信息
      */
     public TemplateConfig getTemplate() {
-    	return template;
+    	return template == null ? new TemplateConfig() : template;
     }
 
     //****************************** 曝露方法 END**********************************

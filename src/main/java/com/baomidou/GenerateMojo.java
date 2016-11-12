@@ -198,6 +198,7 @@ public class GenerateMojo extends AbstractGenerateMojo {
                 vmToFile(context, template.getController(), controllerFile);
             }
         } catch (IOException e) {
+        	log.error("无法创建文件，请检查配置信息！");
             e.printStackTrace();
         }
     }
