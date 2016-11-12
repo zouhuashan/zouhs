@@ -1,5 +1,6 @@
 package ${package.Entity};
 
+import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.IdType;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
@@ -17,7 +18,7 @@ import java.util.Date;
  * @since ${date}
  */
 @TableName("${table.name}")
-public class ${entity} implements Serializable {
+public class ${entity} extends Model<${entity}> {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
