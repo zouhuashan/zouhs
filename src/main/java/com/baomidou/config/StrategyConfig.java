@@ -1,9 +1,9 @@
 package com.baomidou.config;
 
-import com.baomidou.config.rules.IdClassType;
+import org.apache.maven.plugins.annotations.Parameter;
+
 import com.baomidou.config.rules.IdStrategy;
 import com.baomidou.config.rules.NamingStrategy;
-import org.apache.maven.plugins.annotations.Parameter;
 
 /**
  * 策略配置项
@@ -13,103 +13,93 @@ import org.apache.maven.plugins.annotations.Parameter;
  */
 public class StrategyConfig {
 
-    /**
-     * 数据库表映射到实体的命名策略
-     */
-    @Parameter(defaultValue = "nochange")
-    private NamingStrategy naming;
-    
-    private NamingStrategy fieldNaming;
-    
-    private String tablePrefix;
-    
-    /**
-     * Entity 中的ID生成类型
-     */
-    @Parameter(defaultValue = "ID_WORKER")
-    private IdStrategy idGenType;
+	/**
+	 * 数据库表映射到实体的命名策略
+	 */
+	@Parameter(defaultValue = "nochange")
+	private NamingStrategy naming;
 
-    /**
-     * 数据库表设计的ID的类型 STIRNG, LONG
-     */
-    @Parameter(defaultValue = "stringtype")
-    private IdClassType serviceIdType;
-    
-    /**
-     * 自定义继承的Entity类全称，带包名
-     */
-    @Parameter
-    private String superEntityClass;
-    
-    /**
-     * 自定义继承的Mapper类全称，带包名
-     */
-    @Parameter(defaultValue = ConstVal.SUPERD_MAPPER_CLASS)
-    private String superMapperClass;
-    
-    /**
-     * 自定义继承的Service类全称，带包名
-     */
-    @Parameter(defaultValue = ConstVal.SUPERD_SERVICE_CLASS)
-    private String superServiceClass;
-    
-    /**
-     * 自定义继承的ServiceImpl类全称，带包名
-     */
-    @Parameter(defaultValue = ConstVal.SUPERD_SERVICEIMPL_CLASS)
-    private String superServiceImplClass;
-    
-    /**
-     * 自定义继承的Controller类全称，带包名
-     */
-    @Parameter
-    private String superControllerClass;
+	private NamingStrategy fieldNaming;
 
-    /*
-     *  需要包含的表名（与exclude二选一配置）
-     */
-    @Parameter
-    private String[] include = null;
+	private String tablePrefix;
 
-    /**
-     * 需要排除的表名
-     */
-    @Parameter
-    private String[] exclude = null;
+	/**
+	 * Entity 中的ID生成类型
+	 */
+	@Parameter(defaultValue = "ID_WORKER")
+	private IdStrategy idGenType;
 
-    public NamingStrategy getNaming() {
-        return naming;
-    }
-    
-    public NamingStrategy getFieldNaming() {
-    	if(fieldNaming == null)
-    		return naming;
-        return fieldNaming;
-    }
-    
-    public String getTablePrefix() {
-    	return tablePrefix;
-    }
+	/**
+	 * 自定义继承的Entity类全称，带包名
+	 */
+	@Parameter
+	private String superEntityClass;
 
-    public IdClassType getServiceIdType() {
-        return serviceIdType;
-    }
+	/**
+	 * 自定义继承的Mapper类全称，带包名
+	 */
+	@Parameter(defaultValue = ConstVal.SUPERD_MAPPER_CLASS)
+	private String superMapperClass;
 
-    public IdStrategy getIdGenType() {
-        return idGenType;
-    }
+	/**
+	 * 自定义继承的Service类全称，带包名
+	 */
+	@Parameter(defaultValue = ConstVal.SUPERD_SERVICE_CLASS)
+	private String superServiceClass;
 
-    public String[] getInclude() {
-        return include;
-    }
+	/**
+	 * 自定义继承的ServiceImpl类全称，带包名
+	 */
+	@Parameter(defaultValue = ConstVal.SUPERD_SERVICEIMPL_CLASS)
+	private String superServiceImplClass;
 
-    public String[] getExclude() {
-        return exclude;
-    }
+	/**
+	 * 自定义继承的Controller类全称，带包名
+	 */
+	@Parameter
+	private String superControllerClass;
 
-    public String getSuperServiceClass() {
-        return superServiceClass;
-    }
+	/*
+	 * 需要包含的表名（与exclude二选一配置）
+	 */
+	@Parameter
+	private String[] include = null;
+
+	/**
+	 * 需要排除的表名
+	 */
+	@Parameter
+	private String[] exclude = null;
+
+	public NamingStrategy getNaming() {
+		return naming;
+	}
+
+	public NamingStrategy getFieldNaming() {
+		if (fieldNaming == null)
+			return naming;
+		return fieldNaming;
+	}
+
+	public String getTablePrefix() {
+		return tablePrefix;
+	}
+
+	public IdStrategy getIdGenType() {
+		return idGenType;
+	}
+
+	public String[] getInclude() {
+		return include;
+	}
+
+	public String[] getExclude() {
+		return exclude;
+	}
+
+	public String getSuperServiceClass() {
+		return superServiceClass;
+	}
 
 	public String getSuperEntityClass() {
 		return superEntityClass;
