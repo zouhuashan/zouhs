@@ -6,15 +6,12 @@ package com.baomidou.config.po;
  * Describe: 字段信息
  */
 public class TableField {
-
     private boolean keyFlag;
     private String name;
     private String type;
     private String propertyName;
-    private String capitalName;
     private String propertyType;
     private String comment;
-    private boolean convert;
 
     public boolean isKeyFlag() {
         return keyFlag;

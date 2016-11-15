@@ -263,8 +263,7 @@ public class ConfigBuilder {
 	 */
 	private List<TableInfo> processTable(List<TableInfo> tableList, NamingStrategy strategy, String tablePrefix) {
 		for (TableInfo tableInfo : tableList) {
-			tableInfo.setEntityName(
-					NamingStrategy.capitalFirst(processName(tableInfo.getName(), strategy, tablePrefix)));
+			tableInfo.setEntityName(NamingStrategy.capitalFirst(processName(tableInfo.getName(), strategy, tablePrefix)));
 			tableInfo.setMapperName(tableInfo.getEntityName() + ConstVal.MAPPER);
 			tableInfo.setXmlName(tableInfo.getMapperName());
 			tableInfo.setServiceName("I" + tableInfo.getEntityName() + ConstVal.SERIVCE);

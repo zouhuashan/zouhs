@@ -22,6 +22,8 @@
         <enableCache>true</enableCache>
         <!-- 开发者名称 -->
         <author>Yanghu</author>
+        <!-- 是否开启 ActiveRecord 模式(默认true) -->
+		<activeRecord>false</activeRecord>
         <!-- 数据源配置，( **必配** ) -->
         <dataSource>
             <driverName>com.mysql.jdbc.Driver</driverName>
@@ -42,7 +44,7 @@
             <!--Entity中的ID生成策略（默认 id_worker）-->
             <idGenType>uuid</idGenType>
             <!--自定义超类-->
-            <!--<superServiceClass>net.hyman.base.BaseService</superServiceClass>-->
+            <!--<superServiceClass>com.baomidou.base.BaseService</superServiceClass>-->
             <!-- 要包含的表 与exclude 二选一配置-->
             <!--<include>-->
                 <!--<property>sec_user</property>-->
@@ -55,7 +57,7 @@
         </strategy>
         <packageInfo>
             <!-- 父级包名称，如果不写，下面的service等就需要写全包名(默认com.baomidou) -->
-            <parent>net.hyman</parent>
+            <parent>com.baomidou</parent>
             <!--service包名(默认service)-->
             <service>service</service>
             <!--serviceImpl包名(默认service.impl)-->
@@ -82,7 +84,20 @@
 </plugin>
 ```
 
-  * 在命令行中进入项目路径，然后执行：mvn mybatisplus:generate
+# 执行
+  * 可使用mvn clean install将自定义的这个插件安装到本地仓库。
+	执行：mvn clean install
+
+	命令：mvn com.baomidou:mybatisplus-maven-plugin:1.0:code
+
+  * 显然这个命令太长了，使用很不方便，可在settings.xml中配置如下：
+	```
+  	<pluginGroups>
+		<pluginGroup>com.baomidou</pluginGroup>
+	</pluginGroups>
+	```
+  * 然后使用简单命令：mvn mp:code
+
   
 #####二、参数说明
   

@@ -8,7 +8,7 @@ import com.baomidou.config.rules.NamingStrategy;
 /**
  * 策略配置项
  *
- * @author YangHu, tangguo
+ * @author YangHu, tangguo, hubin
  * @since 2016/8/30
  */
 public class StrategyConfig {
