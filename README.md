@@ -12,7 +12,7 @@
 <plugin>
     <groupId>com.baomidou</groupId>
     <artifactId>mybatisplus-maven-plugin</artifactId>
-    <version>1.0.0</version>
+    <version>1.0</version>
     <configuration>
         <!-- 输出目录(默认java.io.tmpdir) -->
         <outputDir>e:\cache</outputDir>
@@ -39,8 +39,6 @@
             remove_prefix_and_camel(去除第一个下划线的前部分，后面转驼峰) 
             -->
             <naming>underline_to_camel</naming>
-            <!-- ID策略 是LONG还是STRING类型(默认stringtype)-->
-            <serviceIdType>longtype</serviceIdType>
             <!--Entity中的ID生成策略（默认 id_worker）-->
             <idGenType>uuid</idGenType>
             <!--自定义超类-->

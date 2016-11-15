@@ -97,7 +97,7 @@
 			<plugin>
 				<groupId>com.baomidou</groupId>
 				<artifactId>mybatisplus-maven-plugin</artifactId>
-				<version>2.0.0</version>
+				<version>1.0</version>
 				<configuration>
 					<!-- 输出目录(默认java.io.tmpdir) -->
 					<outputDir>C:\Users\Administrator\Desktop\mytest</outputDir>
