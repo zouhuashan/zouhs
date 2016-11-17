@@ -21,6 +21,10 @@ public class StrategyConfig {
 
 	private NamingStrategy fieldNaming;
 
+	/**
+	 * 表前缀
+	 */
+	@Parameter
 	private String tablePrefix;
 
 	/**
