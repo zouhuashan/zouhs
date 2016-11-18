@@ -84,7 +84,7 @@
 ```
 
 # 执行
-  * 可使用mvn clean install将自定义的这个插件安装到本地仓库。
+  * 下载源码的同学！可使用mvn clean install将自定义的这个插件安装到本地仓库。
 	执行：mvn clean install
 
 	命令：mvn com.baomidou:mybatisplus-maven-plugin:1.0:code
