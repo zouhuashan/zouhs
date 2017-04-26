@@ -4,7 +4,7 @@ package ${package.Entity};
 import com.baomidou.mybatisplus.activerecord.Model;
 #end
 #if(${idGenType}!="ID_WORKER")
-import com.baomidou.mybatisplus.annotations.IdType;
+import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
 #end
 import com.baomidou.mybatisplus.annotations.TableField;
