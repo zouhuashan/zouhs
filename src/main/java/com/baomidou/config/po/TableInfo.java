@@ -1,6 +1,5 @@
 package com.baomidou.config.po;
 
-
 import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
@@ -26,6 +25,7 @@ public class TableInfo {
     private List<TableField> fields;
     private String fieldNames;
     private boolean hasDate;
+    private boolean hasDecimal;
 
     public String getName() {
         return name;
@@ -84,14 +84,14 @@ public class TableInfo {
     }
 
     public String getControllerName() {
-		return controllerName;
-	}
+        return controllerName;
+    }
 
-	public void setControllerName(String controllerName) {
-		this.controllerName = controllerName;
-	}
+    public void setControllerName(String controllerName) {
+        this.controllerName = controllerName;
+    }
 
-	public List<TableField> getFields() {
+    public List<TableField> getFields() {
         return fields;
     }
 
@@ -133,6 +133,16 @@ public class TableInfo {
             }
         }
         return hasDate;
+    }
+
+    public boolean isHasDecimal() {
+        for (TableField fieldInfo : fields) {
+            if (fieldInfo.getPropertyType().equals("BigDecimal")) {
+                hasDecimal = true;
+                break;
+            }
+        }
+        return hasDecimal;
     }
 
     /**
