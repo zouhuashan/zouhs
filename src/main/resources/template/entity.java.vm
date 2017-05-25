@@ -4,7 +4,7 @@ package ${package.Entity};
 import com.baomidou.mybatisplus.activerecord.Model;
 #end
 #if(${idGenType}!="ID_WORKER")
-import com.baomidou.mybatisplus.annotations.IdType;
+import com.baomidou.mybatisplus.enums.IdType;
 import com.baomidou.mybatisplus.annotations.TableId;
 #end
 import com.baomidou.mybatisplus.annotations.TableField;
@@ -14,6 +14,9 @@ import com.baomidou.mybatisplus.annotations.TableName;
 import java.io.Serializable;
 #if(${table.hasDate})
 import java.util.Date;
+#end
+#if(${table.hasDecimal})
+import java.math.BigDecimal;
 #end
 
 /**
