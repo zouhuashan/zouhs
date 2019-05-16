@@ -4,7 +4,7 @@
 
 	<groupId>com.baomidou</groupId>
 	<artifactId>mybatisplus-maven-plugin</artifactId>
-	<version>1.0</version>
+	<version>3.0</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>mybatisplus-maven-plugin Maven Plugin</name>
@@ -104,10 +104,10 @@
 			<plugin>
 				<groupId>com.baomidou</groupId>
 				<artifactId>mybatisplus-maven-plugin</artifactId>
-				<version>1.0</version>
+				<version>2.0</version>
 				<configuration>
 					<!-- 输出目录(默认java.io.tmpdir) -->
-					<outputDir>C:\Users\Administrator\Desktop\mytest</outputDir>
+					<outputDir>e:\cache</outputDir>
 					<!-- 是否覆盖同名文件(默认false) -->
 					<fileOverride>true</fileOverride>
 					<!-- 是否打开输出目录(默认true) -->
@@ -127,9 +127,9 @@
 					<!-- </dataSource> -->
 					<dataSource>
 						<driverName>com.mysql.jdbc.Driver</driverName>
-						<url>jdbc:mysql://localhost:3306/mybatis-plus</url>
+						<url>jdbc:mysql://127.0.0.1:3306/fca20171225?useUnicode=true&amp;useSSL=false</url>
 						<username>root</username>
-						<password>521</password>
+						<password>123456</password>
 					</dataSource>
 					<strategy>
 						<!-- 字段生成策略，四种类型，从名称就能看出来含义： 
@@ -167,6 +167,7 @@
 						<mapper>mapper</mapper>
 						<!--xml包名(默认mapper.xml) -->
 						<xml>mapper.xml</xml>
+						<jsp>admin</jsp>
 					</packageInfo>
 					<template>
 						<!-- <controller>/template/controller.java.vm</controller> -->

@@ -1,0 +1,44 @@
+package ${package.Entity};
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+#if(${table.hasDate})
+import java.util.Date;
+#end
+#if(${table.hasDecimal})
+import java.math.BigDecimal;
+#end
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+/**
+ * <p>
+ * ${table.comment}vo实体
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Data
+public class ${entity}VO {
+
+#foreach($field in ${table.fields})
+    /**
+     * ${field.comment}
+     */
+#if($field.convert && ${field.name.toLowerCase()} != ${field.propertyName.toLowerCase()})
+    @JsonProperty("${field.name}")
+#end
+#if(${field.propertyType.equals("Date")})
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+#end
+    @ApiModelProperty("${field.comment}")
+#if(${field.propertyType.equals("Long")})
+    private String ${field.propertyName};
+#else
+    private ${field.propertyType} ${field.propertyName};
+#end
+#end
+
+}

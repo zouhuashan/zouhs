@@ -1,7 +1,7 @@
 package ${package.Controller};
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -12,7 +12,89 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @since ${date}
  */
 @Controller
-@RequestMapping("#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityName.toLowerCase()}")
-public class ${table.controllerName} {
-	
+@Secured("ROLE_${table.serviceName}")
+@RequestMapping("/${table.entityName.toLowerCase()}")
+public class ${table.controllerName} extends BaseController{
+
+    private final ${table.feignClientName} ${table.serviceNameInfeignClientName};
+
+    @Autowired
+    public ${table.controllerName}(${table.feignClientName} ${table.serviceNameInfeignClientName}) {
+        this.${table.serviceNameInfeignClientName} = ${table.serviceNameInfeignClientName};
+    }
+
+    /**
+     * 跳转-${table.comment}首页
+     */
+    @GetMapping()
+    public ModelAndView go${table.entityName}Main(){
+        return new ModelAndView("${table.entityNameVO}/${table.entityNameVO}Main");
+    }
+
+    /**
+     * 首页-数据
+     */
+    @RequestMapping("find${table.entityName}List")
+    public void find${table.entityName}List(${table.entityName}Vo ${table.entityNameVO}Vo, HttpServletResponse response){
+        PageInfo<${table.entityName}Vo> pageInfo = ${table.serviceNameInfeignClientName}.find${table.entityName}List(${table.entityNameVO}Vo);
+        datagridReturn(response,pageInfo);
+    }
+
+    /**
+     * 跳转-新增/编辑
+     */
+    @RequestMapping("go${table.entityName}Form")
+    public ModelAndView go${table.entityName}Form(${table.entityName}Vo ${table.entityNameVO}Vo){
+        ModelAndView view = new ModelAndView("${table.entityNameVO}/${table.entityNameVO}Form");
+        if(StringUtils.isNotBlank(${table.entityNameVO}.getId())){
+            ${table.entityName}Vo vo = ${table.serviceNameInfeignClientName}.get${table.entityName}ById(${table.entityNameVO}Vo.getId());
+            view.addObject("vo",vo);
+        }
+        return view;
+    }
+
+
+    /**
+     * 保存
+     */
+    @ResponseBody
+    @RequestMapping("save")
+    public AjaxJson save(@Valid ${table.entityName}Vo ${table.entityNameVO}Vo, BindingResult result){
+        AjaxJson json = null;
+        String error = getError(result);
+        if (StringUtils.isNotBlank(error)) {
+            json = new AjaxJson(false, error);
+            return json;
+        }
+
+        try {
+            String name = SSOUtils.getUserOfLogin().getName();
+            if(StringUtil.isNotEmpty(${table.entityNameVO}Vo.getId())) {
+                ${table.entityNameVO}Vo.setUpdateName(name);
+            } else {
+                ${table.entityNameVO}Vo.setCreateName(name);
+            }
+            json = ${table.serviceNameInfeignClientName}.save(${table.entityNameVO}Vo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            json = new AjaxJson(false, e.getMessage());
+        }
+        return json;
+    }
+
+    /**
+     * 删除
+     */
+    @ResponseBody
+    @RequestMapping("del")
+    public AjaxJson del(String id){
+        AjaxJson aj = null;
+        try{
+            aj = ${table.serviceNameInfeignClientName}.del(id);
+        }catch(Exception e){
+            e.printStackTrace();
+            aj = new AjaxJson(false,e.getMessage());
+        }
+        return aj;
+    }
 }

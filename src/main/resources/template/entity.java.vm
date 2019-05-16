@@ -1,5 +1,6 @@
 package ${package.Entity};
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 #if(${activeRecord})
 import com.baomidou.mybatisplus.activerecord.Model;
 #end
@@ -10,14 +11,15 @@ import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableField;
 #if(${addTabeName})
 import com.baomidou.mybatisplus.annotations.TableName;
+import com.oracle.webservices.internal.api.databinding.DatabindingMode;
 #end
-import java.io.Serializable;
 #if(${table.hasDate})
 import java.util.Date;
 #end
 #if(${table.hasDecimal})
 import java.math.BigDecimal;
 #end
+import lombok.Data;
 
 /**
  * <p>
@@ -30,42 +32,23 @@ import java.math.BigDecimal;
 #if(${addTabeName})
 @TableName("${table.name}")
 #end
-#if(${activeRecord})
-public class ${entity} extends Model<${entity}> {
-#else
-public class ${entity} implements Serializable {
-#end
-
-    private static final long serialVersionUID = 1L;
+@Data
+public class ${entity} {
 
 #foreach($field in ${table.fields})
-	/**
-	 * ${field.comment}
-	 */
+    /**
+     * ${field.comment}
+     */
 #if(${field.keyFlag} && ${idGenType}!="ID_WORKER")
-	@TableId(type = IdType.${idGenType})
+    @TableId(type = IdType.${idGenType})
 #end
 #if($field.convert && ${field.name.toLowerCase()} != ${field.propertyName.toLowerCase()})
-	@TableField(value="${field.name}")
+    @TableField(value="${field.name}")
 #end
-	private ${field.propertyType} ${field.propertyName};
-
+#if(${field.propertyType.equals("Date")})
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
 #end
-
-#foreach($field in ${table.fields})
-#if(${field.propertyName.equals("Boolean")})
-#set($getprefix="is")
-#else
-#set($getprefix="get")
-#end
-
-	public ${field.propertyType} ${getprefix}${field.capitalName}() {
-		return ${field.propertyName};
-	}
-
-	public void set${field.capitalName}(${field.propertyType} ${field.propertyName}) {
-		this.${field.propertyName} = ${field.propertyName};
-	}
+    private ${field.propertyType} ${field.propertyName};
 #end
 
 }

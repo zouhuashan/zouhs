@@ -3,8 +3,20 @@ package ${package.ServiceImpl};
 import ${package.Entity}.${entity};
 import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
-import ${superServiceImplClassPackage};
+import ${package.baseys}.vo.${entity}VO;
+import ${package.baseys}.vo.PageRequestVO;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.baomidou.mybatisplus.plugins.Page;
+import java.util.List;
+import java.util.Objects;
+import ${package.baseys}.util.DateUtil;
 
 /**
  * <p>
@@ -15,6 +27,80 @@ import org.springframework.stereotype.Service;
  * @since ${date}
  */
 @Service
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
-	
+public class ${table.serviceImplName} implements ${table.serviceName} {
+
+    @Autowired
+    private ${table.mapperName} ${table.mapperNameInServiceImpl};
+
+    /**
+    * 分页查询
+    * @param reqVo
+    * @return
+    */
+    @Override
+    public Page selectPage(PageRequestVO<${entity}VO> reqVo) {
+        Page<${entity}VO> page = new Page<>(reqVo.getCurrent(), reqVo.getSize());
+        int offset = (page.getCurrent() - 1) * page.getSize();
+        ${entity}VO vo = Objects.isNull(reqVo.getSeachVO()) ? new ${entity}VO() : reqVo.getSeachVO();
+        List<${entity}> list = ${table.mapperNameInServiceImpl}.selectPageList(offset, page.getSize(), vo);
+        List<${entity}VO> re = Lists.newArrayList();
+        Integer total = ${table.mapperNameInServiceImpl}.selectPageListCount(vo);
+        page.setTotal(total);
+
+        if (CollectionUtils.isNotEmpty(list)) {
+            for (${entity} item : list) {
+                ${entity}VO cur = new ${entity}VO();
+                BeanUtils.copyProperties(item, cur);
+                if (Objects.nonNull(item.getId())) {
+                    cur.setId(item.getId().toString());
+                }
+                re.add(cur);
+            }
+        }
+        page.setRecords(re);
+        return page;
+    }
+
+    /**
+     * 新增or编辑
+     * @param vo 查询参数
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void save(${entity}VO vo){
+        ${entity} po = new ${entity}();
+        if(Objects.isNull(vo)) {
+            return;
+        }
+        BeanUtils.copyProperties(vo, po);
+        if (StringUtils.isNotBlank(vo.getId())) {
+            po.setId(Long.valueOf(vo.getId()));
+            po.setUpdateTime(DateUtil.now());
+            //添加逻辑
+            ${table.mapperNameInServiceImpl}.updateById(po);
+        }else{
+            po.setCreateTime(DateUtil.now());
+            //添加逻辑
+            ${table.mapperNameInServiceImpl}.insert(po);
+        }
+    }
+
+    /**
+     * 查看明细
+     * @param id 业务主键
+     * @return ${entity}VO
+     */
+    @Override
+    public ${entity}VO view(Long id){
+        ${entity} po = ${table.mapperNameInServiceImpl}.selectById(id);
+        if (Objects.nonNull(po)) {
+            ${entity}VO vo = new ${entity}VO();
+            BeanUtils.copyProperties(po, vo);
+            if (Objects.nonNull(po.getId())) {
+                vo.setId(po.getId().toString());
+            }
+            return vo;
+        }
+        return null;
+    }
 }

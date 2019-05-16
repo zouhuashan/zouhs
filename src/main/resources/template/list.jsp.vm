@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta charset="utf-8" />
+        <title>${table.entityName.toLowerCase()}</title>
+
+        <meta name="description" content="Dynamic tables and grids using jqGrid plugin" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+    <\#include "../../common/header.ftl"/>
+    </head>
+
+    <body class="no-skin">
+    <div class="page-content">
+
+
+        <div class="row" id="grid-search">
+            <div class="col-xs-12">
+                <form class="form-horizontal" id="form_${table.entityName.toLowerCase()}_search">
+                    <div class="form-group"  >
+                        <label class="col-sm-2 control-label " for="id">id:</label>
+                        <div class="col-sm-3">
+                            <input id="id" name="id" class="form-control" type="text" placeholder="id">
+                        </div>
+                        <@shiro.hasPermission name="${table.entityName.toLowerCase()}_search">
+                        <div class="col-sm-2">
+                            <button  id="search_rows" class="btn btn-white btn-info btn-sm btn-bold" type="button" >
+                                <i class="ace-icon fa fa-search  bigger-120 blue"></i>
+                                搜索
+                            </button>
+                            <button  id="search_reset" class="btn btn-white btn-info btn-sm btn-bold" type="button" >
+                                <i class="ace-icon fa fa-undo  bigger-120 blue"></i>
+                                重置
+                            </button>
+                        </div>
+                        </@shiro.hasPermission>
+
+                    </div>
+                    <div class="form-group"  >
+
+                        <#-- 里面的div加起来要小于或者等于12-->
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="grid-btn" class="row">
+            <div class="col-xs-12">
+            <@shiro.hasPermission name="${table.entityName.toLowerCase()}_add">
+                <button id="add_rows" class="btn btn-white btn-info btn-sm btn-bold">
+                    <i class="ace-icon fa fa-plus  bigger-120 blue"></i>
+                    新增
+                </button>
+            </@shiro.hasPermission>
+
+           <@shiro.hasPermission name="${table.entityName.toLowerCase()}_edit">
+                <button id="edit_rows" class="btn btn-white btn-info btn-sm btn-bold">
+                    <i class="ace-icon fa fa-pencil  bigger-120 blue"></i>
+                    编辑
+                </button>
+           </@shiro.hasPermission>
+           <@shiro.hasPermission name="${table.entityName.toLowerCase()}_view">
+                <button id="view_rows" class="btn btn-white btn-info btn-sm btn-bold">
+                    <i class="ace-icon fa fa-eye  bigger-120 blue"></i>
+                    查看
+                </button>
+           </@shiro.hasPermission>
+           <@shiro.hasPermission name="${table.entityName.toLowerCase()}_delete">
+                <button  id="del_rows" class="btn btn-white btn-info btn-sm btn-bold">
+                    <i class="ace-icon fa fa-trash  bigger-120 blue"></i>
+                    删除
+                </button>
+           </@shiro.hasPermission>
+
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-xs-12">
+
+
+                <div>
+                    <table id="grid-table">
+
+                    </table>
+
+                    <div id="grid-pager"></div>
+                </div>
+                <!-- PAGE CONTENT ENDS -->
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.page-content -->
+
+    <\#include "../../common/footer.ftl"/>
+        <!-- inline scripts related to this page -->
+        <script type="text/javascript">
+            var _grid ;
+            
+            jQuery(function($) {
+
+                //表格控件
+                var grid_selector = "#grid-table";
+                var pager_selector = "#grid-pager";
+
+              /*
+                强制单选一行
+                function beforeSelectRow()
+                {
+                    $(grid_selector).jqGrid('resetSelection');
+                    return(true);
+                }*/
+
+                _grid = jQuery(grid_selector).jqGrid({
+                    url:"${request.contextPath}/admin/${table.entityName.toLowerCase()}/getAll",
+                    datatype: "json",
+                    autowidth:true,
+                    colNames:[
+                   #foreach($field in ${table.fields})
+                       '${field.comment}'#if($velocityCount != $table.fields.size()),#end
+
+                    #end
+                                             ],
+
+                    colModel:[
+                            #foreach($field in ${table.fields})
+                             {name:'${field.propertyName}',index:'${field.name}' }#if($velocityCount != $table.fields.size()),#end
+
+                            #end
+                                                ],
+                    height:'auto',
+                    rowNum:10,
+                    rowList:[10,20,30],
+                    pager: pager_selector,
+                    multiselect: true,
+//                    multiboxonly:true,
+//                    beforeSelectRow: beforeSelectRow,//js方法
+                    sortname: 'id',
+                    viewrecords: true,
+                    altRows: true,
+                    datatype: "json",
+                    mtype: 'POST',
+                    sortorder: "desc"
+
+                });
+
+ 
+
+##                _grid.jqGrid('navGrid',pager_selector,{edit:false,add:false,del:false});
+                $(window).triggerHandler('resize.jqGrid');
+
+
+                //搜索地址
+                var searchUrl = "${request.contextPath}/admin/${table.entityName.toLowerCase()}/search";
+                $("#search_rows").click(function(){
+                    //获取搜索框的值
+                    //var typeName = $("#typeName").val();
+                    //var name = $("#name").val();
+                    var id = $("#id").val();
+                    //每次提出新的查询都转到第一页
+                    _grid.jqGrid("setGridParam",{page:1});
+                    //传入查询条件参数 将搜索框的值传递过去
+                    _grid.jqGrid("setGridParam",{datatype:'json',postData:{'id': id }});
+                    //提交post并刷新表格
+                    _grid.jqGrid("setGridParam",{url:searchUrl}).trigger("reloadGrid");
+
+                });
+                $("#search_reset").click(function(){
+                    //完善重置逻辑，重置搜索框内容
+                    $("#form_${table.entityName.toLowerCase()}_search")[0].reset();
+                });
+
+
+                //新增
+                var addUrl = "${request.contextPath}/admin/${table.entityName.toLowerCase()}/add";
+                $("#add_rows").click(function(){
+                    layer.open({
+                        type: 2,
+                        skin:"layui-layer-lan",
+                        title :'新增',
+                        area: ['1024px', '500px'],
+                        content: [addUrl]
+                    });
+                });
+                //编辑
+                var editUrl = "${request.contextPath}/admin/${table.entityName.toLowerCase()}/edit";
+                $("#edit_rows").click(function(){
+                    var ids=_grid.jqGrid("getGridParam","selarrrow");
+                    if(ids.length!=1){
+                        swal({
+                            text: "请选中需要编辑的一行!",
+                            button: "确定"
+                        });
+                    } else{
+                        var rowid=_grid.jqGrid("getGridParam","selrow");
+                        layer.open({
+                            type: 2,
+                            skin:"layui-layer-lan",
+                            title :'编辑',
+                            area: ['1024px', '500px'],
+                            content: [editUrl+"?id="+rowid]
+                        });
+                    }
+                });
+                //查看
+                var viewUrl = "${request.contextPath}/admin/${table.entityName.toLowerCase()}/view";
+                $("#view_rows").click(function(){
+                    var ids=_grid.jqGrid("getGridParam","selarrrow");
+                    if(ids.length!=1){
+                        swal({
+                            text: "请选中需要查看的一行!",
+                            button: "确定"
+                        });
+                    } else{
+                        var rowid=_grid.jqGrid("getGridParam","selrow");
+                        layer.open({
+                            type: 2,
+                            skin:"layui-layer-lan",
+                            title :'查看',
+                            area: ['1024px', '500px'],
+                            content: [viewUrl+"?id="+rowid]
+                        });
+                    }
+                });
+                //删除
+                var deleteUrl = "${request.contextPath}/admin/${table.entityName.toLowerCase()}/deleteByIds";
+                $("#del_rows").click(function(){
+                    var ids=_grid.jqGrid("getGridParam","selarrrow");
+                    if(ids.length==0){
+                        swal({
+                            text: "请选中需要删除的行!",
+                            button: "确定"
+                        });
+                    }else{
+                            swal({
+                                confirm: "Confirm",
+                                text: "确定删除？",
+                                buttons: ["取消", "确定"]
+                            }).then(function(willDelete){
+                                if (willDelete) {
+                                    $.post(deleteUrl,{'ids':JSON.stringify(ids)},function(result){
+                                        if(result == 'true' || result == true) {
+                                            swal({
+                                                text: "删除成功!",
+                                                button: "确定"
+                                            }).then(function(){
+                                                refreshGrid();
+                                            });
+                                        }else{
+                                            swal({
+                                                text: "删除失败!",
+                                                button: "确定"
+                                            });
+                                        }
+                                    });
+                                }
+                            }
+                        );
+                    }
+                });
+            });
+
+            /**
+             * 刷新表格
+             */
+            function refreshGrid(){
+                _grid.trigger("reloadGrid");
+            }
+
+
+
+
+
+        </script>
+
+    </body>
+</html>

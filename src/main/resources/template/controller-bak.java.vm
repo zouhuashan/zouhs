@@ -1,0 +1,137 @@
+package ${package.Controller};
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PostMapping;
+import com.baomidou.mybatisplus.plugins.Page;
+import ${package.baseys}.util.PageParam;
+import ${package.baseys}.util.PageResult;
+import ${package.Service}.${table.serviceName};
+import ${package.Entity}.${entity};
+import javax.servlet.http.HttpServletRequest;
+import com.alibaba.fastjson.JSON;
+import java.util.List;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+/**
+ * <p>
+ * ${table.comment}  前端控制器
+ * </p>
+ *
+ * @author ${author}
+ * @since ${date}
+ */
+@Controller
+@RequestMapping("/admin#if(${package.ModuleName})/${package.ModuleName}#end/${table.entityName.toLowerCase()}")
+public class ${table.controllerName} {
+    @Autowired
+    private ${table.serviceName} ${table.serviceNameInController};
+    /**
+     * 跳转模块首页
+     * @return
+     */
+    @GetMapping("/index")
+    @RequiresPermissions("${table.entityName.toLowerCase()}")
+    public String index() {
+        return "admin/${table.entityName.toLowerCase()}/list";
+    }
+
+    /**
+     * 分页
+     * @param page
+     * @return
+     */
+    @PostMapping("/getAll")
+    @ResponseBody
+    @RequiresPermissions("${table.entityName.toLowerCase()}")
+    public PageResult<${entity}> getAll(PageParam<${entity}> page) {
+        Page<${entity}> result = ${table.serviceNameInController}.selectPage(page);
+        return new PageResult<${entity}>(result);
+    }
+    /**
+    * 搜索
+    * @param page
+    * @param vo 如果是单表可以直接用实体类，如果是联表查询那就在vo包下建立vo
+    * @return
+    */
+    @PostMapping("/search")
+    @ResponseBody
+    @RequiresPermissions("${table.entityName.toLowerCase()}_search")
+    public PageResult<${entity}> search( PageParam<${entity}> page,${entity} vo) {
+        Page<${entity}> result = ${table.serviceNameInController}.selectPageList(page,vo);
+        return new PageResult<${entity}>(result);
+    }
+    /**
+     * 跳转新增页面
+     * @return
+     */
+    @GetMapping("/add")
+    @RequiresPermissions("${table.entityName.toLowerCase()}_add")
+    public String add() {
+        return "admin/${table.entityName.toLowerCase()}/add";
+    }
+    /**
+     * 跳转修改页面
+     * @return
+     */
+    @GetMapping("/edit")
+    @RequiresPermissions("${table.entityName.toLowerCase()}_edit")
+    public String edit(Integer id, HttpServletRequest request) {
+    ${entity} ${table.entityName.toLowerCase()} = ${table.serviceNameInController}.selectById(id);
+        request.setAttribute("${table.entityName.toLowerCase()}" , ${table.entityName.toLowerCase()});
+        return "admin/${table.entityName.toLowerCase()}/edit";
+    }
+    /**
+     * 跳转修改页面
+     * @return
+     */
+    @GetMapping("/view")
+    @RequiresPermissions("${table.entityName.toLowerCase()}_view")
+    public String view(Integer id, HttpServletRequest request) {
+    ${entity} ${table.entityName.toLowerCase()} = ${table.serviceNameInController}.selectById(id);
+        request.setAttribute("${table.entityName.toLowerCase()}" , ${table.entityName.toLowerCase()});
+        return "admin/${table.entityName.toLowerCase()}/view";
+    }
+
+    /**
+     * 新增保存
+     * @param vo
+     * @return
+     */
+    @PostMapping("/save")
+    @ResponseBody
+    @RequiresPermissions("${table.entityName.toLowerCase()}_add")
+    public Boolean save(${entity} vo) {
+        Boolean result = ${table.serviceNameInController}.insert(vo);
+        return result;
+    }
+
+    /**
+     * 修改保存
+     * @param vo
+     * @return
+     */
+    @PostMapping("/modify")
+    @ResponseBody
+    @RequiresPermissions("${table.entityName.toLowerCase()}_edit")
+    public Boolean modify( ${entity} vo) {
+        Boolean result = ${table.serviceNameInController}.updateById(vo);
+        return result;
+    }
+    /**
+     * 修改保存
+     * @param ids 被删除的ids集合
+     */
+    @PostMapping("/deleteByIds")
+    @ResponseBody
+    @RequiresPermissions("${table.entityName.toLowerCase()}_delete")
+    public Boolean deleteById( String ids) {
+        List<Integer> idList =  JSON.parseArray(ids, Integer.class);
+        Boolean result = ${table.serviceNameInController}.deleteBatchIds(idList);
+//        Boolean result = true;
+        return result;
+    }
+
+}

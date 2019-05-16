@@ -1,8 +1,8 @@
 package ${package.Service};
 
-import ${package.Entity}.${entity};
-import ${superServiceClassPackage};
-
+import ${package.baseys}.vo.${entity}VO;
+import ${package.baseys}.vo.PageRequestVO;
+import com.baomidou.mybatisplus.plugins.Page;
 /**
  * <p>
  * 服务类
@@ -11,6 +11,24 @@ import ${superServiceClassPackage};
  * @author ${author}
  * @since ${date}
  */
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
-	
+public interface ${table.serviceName} {
+    /**
+     * 分页查询
+     * @param vo 查询参数
+     * @return
+     */
+    Page selectPage(PageRequestVO<${entity}VO> vo);
+
+    /**
+     * 新增or编辑
+     * @param vo 查询参数
+     */
+    void save(${entity}VO vo);
+
+    /**
+     * 查看明细
+     * @param id 业务主键
+     * @return ${entity}VO
+     */
+    ${entity}VO view(Long id);
 }

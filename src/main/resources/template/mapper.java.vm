@@ -2,7 +2,10 @@ package ${package.Mapper};
 
 import ${package.Entity}.${entity};
 import ${superMapperClassPackage};
-
+import ${package.baseys}.vo.${entity}VO;
+import java.util.List;
+import com.baomidou.mybatisplus.plugins.pagination.Pagination;
+import org.apache.ibatis.annotations.Param;
 /**
  * <p>
  * Mapper接口
@@ -12,5 +15,19 @@ import ${superMapperClassPackage};
  * @since ${date}
  */
 public interface ${table.mapperName} extends ${superMapperClass}<${entity}> {
+    /**
+     * 分页查询
+     * @param offset
+     * @param size
+     * @param vo
+     * @return
+     */
+    List<${entity}> selectPageList(@Param("offset") Integer offset, @Param("size") Integer size,@Param("vo") ${entity}VO vo);
 
+    /**
+     * 查总条数 此方法基本没用到
+     * @param vo
+     * @return
+     */
+    Integer selectPageListCount(@Param("vo") ${entity}VO vo);
 }

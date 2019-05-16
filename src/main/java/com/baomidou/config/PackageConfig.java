@@ -28,6 +28,9 @@ public class PackageConfig {
     @Parameter(defaultValue = "entity")
     private String entity;
 
+    @Parameter(defaultValue = "vo")
+    private String vo;
+
     /**
      * Service包名
      */
@@ -48,9 +51,13 @@ public class PackageConfig {
     /**
      * Mapper XML包名
      */
-    @Parameter(defaultValue = "mapper.xml")
+    @Parameter(defaultValue = "dao.xml")
     private String xml;
-    
+    /**
+     * Mapper XML包名
+     */
+    @Parameter(defaultValue = "jsp")
+    private String jsp;
     /**
      * Controller包名
      */
@@ -69,6 +76,10 @@ public class PackageConfig {
 
     public String getEntity() {
         return entity;
+    }
+
+    public String getVo() {
+        return vo;
     }
 
     public String getService() {
@@ -91,4 +102,9 @@ public class PackageConfig {
     	if(StringUtils.isBlank(controller)) return "web";
     	return controller;
     }
+
+    public String getJsp() {
+        return jsp;
+    }
+
 }

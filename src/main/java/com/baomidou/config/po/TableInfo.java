@@ -16,19 +16,68 @@ public class TableInfo {
     private String comment;
 
     private String entityName;
+    private String entityNameVO;
     private String mapperName;
+    private String mapperNameInServiceImpl;
     private String xmlName;
     private String serviceName;
     private String serviceImplName;
     private String controllerName;
+    private String feignClientName;
+    private String degradedFeignClientName;
+    private String apiControllerName;
+    private String serviceNameInfeignClientName;
+    private String serviceNameIndegradedFeignClientName;
+    private String serviceNameInapiControllerName;
+    private String serviceNameInController;
 
     private List<TableField> fields;
     private String fieldNames;
     private boolean hasDate;
     private boolean hasDecimal;
 
+    public String getEntityNameVO() {
+        return entityNameVO;
+    }
+
+    public void setEntityNameVO(String entityNameVO) {
+        this.entityNameVO = entityNameVO;
+    }
+
+    public String getServiceNameInfeignClientName() {
+        return serviceNameInfeignClientName;
+    }
+
+    public void setServiceNameInfeignClientName(String serviceNameInfeignClientName) {
+        this.serviceNameInfeignClientName = serviceNameInfeignClientName;
+    }
+
+    public String getServiceNameIndegradedFeignClientName() {
+        return serviceNameIndegradedFeignClientName;
+    }
+
+    public void setServiceNameIndegradedFeignClientName(String serviceNameIndegradedFeignClientName) {
+        this.serviceNameIndegradedFeignClientName = serviceNameIndegradedFeignClientName;
+    }
+
+    public String getServiceNameInapiControllerName() {
+        return serviceNameInapiControllerName;
+    }
+
+    public void setServiceNameInapiControllerName(String serviceNameInapiControllerName) {
+        this.serviceNameInapiControllerName = serviceNameInapiControllerName;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public String getServiceNameInController() {
+        return serviceNameInController;
+    }
+
+    public void setServiceNameInController(String serviceNameInController) {
+        this.serviceNameInController = serviceNameInController;
     }
 
     public void setName(String name) {
@@ -97,6 +146,38 @@ public class TableInfo {
 
     public void setFields(List<TableField> fields) {
         this.fields = fields;
+    }
+
+    public String getMapperNameInServiceImpl() {
+        return mapperNameInServiceImpl;
+    }
+
+    public void setMapperNameInServiceImpl(String mapperNameInServiceImpl) {
+        this.mapperNameInServiceImpl = mapperNameInServiceImpl;
+    }
+
+    public String getFeignClientName() {
+        return feignClientName;
+    }
+
+    public void setFeignClientName(String feignClientName) {
+        this.feignClientName = feignClientName;
+    }
+
+    public String getDegradedFeignClientName() {
+        return degradedFeignClientName;
+    }
+
+    public void setDegradedFeignClientName(String degradedFeignClientName) {
+        this.degradedFeignClientName = degradedFeignClientName;
+    }
+
+    public String getApiControllerName() {
+        return apiControllerName;
+    }
+
+    public void setApiControllerName(String apiControllerName) {
+        this.apiControllerName = apiControllerName;
     }
 
     /**
