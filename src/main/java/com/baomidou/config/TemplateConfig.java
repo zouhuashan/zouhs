@@ -16,6 +16,15 @@ public class TemplateConfig {
     @Parameter(defaultValue = ConstVal.TEMPLATE_SERVICE)
     private String service;
 
+    @Parameter(defaultValue = ConstVal.TEMPLATE_FEIGNCLIENT)
+    private String feignClient;
+
+    @Parameter(defaultValue = ConstVal.TEMPLATE_DEGRADEDFEIGNCLIEN)
+    private String degradedFeignClien;
+
+    @Parameter(defaultValue = ConstVal.TEMPLATE_APICONTROLLER)
+    private String apiController;
+
     @Parameter(defaultValue = ConstVal.TEMPLATE_SERVICEIMPL)
     private String serviceImpl;
 
@@ -40,6 +49,21 @@ public class TemplateConfig {
     @Parameter(defaultValue = ConstVal.TEMPLATE_CONTROLLER)
     private String controller;
 
+
+    public String getFeignClient() {
+        if (feignClient == null) return ConstVal.TEMPLATE_FEIGNCLIENT;
+        return feignClient;
+    }
+
+    public String getDegradedFeignClien() {
+        if (degradedFeignClien == null) return ConstVal.TEMPLATE_DEGRADEDFEIGNCLIEN;
+        return degradedFeignClien;
+    }
+
+    public String getApiController() {
+        if (apiController == null) return ConstVal.TEMPLATE_APICONTROLLER;
+        return apiController;
+    }
 
     public String getEntity() {
         if (entity == null) return ConstVal.TEMPLATE_ENTITY;
@@ -95,4 +119,7 @@ public class TemplateConfig {
         if (vo == null) return ConstVal.TEMPLATE_VO;
         return vo;
     }
+
+
+
 }

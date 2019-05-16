@@ -33,6 +33,9 @@ public class ConstVal {
 	public static final String XML_PATH = "xml_path";
 	public static final String JSP_PATH = "jsp_path";
 	public static final String CONTROLLER_PATH = "controller_path";
+	public static final String FEIGNCLIENT_PATH = "feign_path";
+	public static final String DEGRADEDFEIGNCLIEN_PATH = "feignImpl_path";
+	public static final String APICONTROLLER_PATH = "apiController_path";
 
 	public static final String JAVA_TMPDIR = "java.io.tmpdir";
 	public static final String UTF8 = Charset.forName("UTF-8").name();
@@ -53,6 +56,10 @@ public class ConstVal {
 	public static final String TEMPLATE_SERVICE = "/template/service.java.vm";
 	public static final String TEMPLATE_SERVICEIMPL = "/template/serviceImpl.java.vm";
 	public static final String TEMPLATE_CONTROLLER = "/template/controller.java.vm";
+    public static final String TEMPLATE_FEIGNCLIENT = "/template/feign.java.vm";
+    public static final String TEMPLATE_DEGRADEDFEIGNCLIEN = "/template/feignImpl.java.vm";
+    public static final String TEMPLATE_APICONTROLLER = "/template/apiController.java.vm";
+
 
 	public static final String ENTITY_NAME = File.separator + "%s" + JAVA_SUFFIX;
 	public static final String MAPPER_NAME = File.separator + "%s" + "Dao" + JAVA_SUFFIX;
@@ -61,6 +68,9 @@ public class ConstVal {
 	public static final String SERVICE_NAME = File.separator + "%s" + SERIVCE + JAVA_SUFFIX;
 	public static final String SERVICEIMPL_NAME = File.separator + "%s" + SERVICEIMPL + JAVA_SUFFIX;
 	public static final String CONTROLLER_NAME = File.separator + "%s" + CONTROLLER + JAVA_SUFFIX;
+    public static final String FEIGNCLIENT_NAME = File.separator + "%s" + FEIGNCLIENT + JAVA_SUFFIX;
+    public static final String DEGRADEDFEIGNCLIEN_NAME = File.separator + "%s" + DEGRADEDFEIGNCLIEN + JAVA_SUFFIX;
+    public static final String APICONTROLLER_NAME = File.separator + "%s" + APICONTROLLER + JAVA_SUFFIX;
 
 	// 配置使用classloader加载资源
 	public static final String VM_LOADPATH_KEY = "file.resource.loader.class";
@@ -69,5 +79,6 @@ public class ConstVal {
 	public static final String SUPERD_MAPPER_CLASS = "com.baomidou.mybatisplus.mapper.BaseMapper";
 	public static final String SUPERD_SERVICE_CLASS = "com.baomidou.mybatisplus.service.Service";
 	public static final String SUPERD_SERVICEIMPL_CLASS = "com.baomidou.mybatisplus.service.impl.ServiceImpl";
-	
+
+
 }

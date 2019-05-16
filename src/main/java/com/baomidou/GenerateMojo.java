@@ -184,6 +184,9 @@ public class GenerateMojo extends AbstractGenerateMojo {
         outputFiles.put(ConstVal.SERIVCE, pathInfo.get(ConstVal.SERIVCE_PATH) + ConstVal.SERVICE_NAME);
         outputFiles.put(ConstVal.SERVICEIMPL, pathInfo.get(ConstVal.SERVICEIMPL_PATH) + ConstVal.SERVICEIMPL_NAME);
         outputFiles.put(ConstVal.CONTROLLER, pathInfo.get(ConstVal.CONTROLLER_PATH) + ConstVal.CONTROLLER_NAME);
+        outputFiles.put(ConstVal.FEIGNCLIENT, pathInfo.get(ConstVal.FEIGNCLIENT_PATH) + ConstVal.FEIGNCLIENT_NAME);
+        outputFiles.put(ConstVal.DEGRADEDFEIGNCLIEN, pathInfo.get(ConstVal.DEGRADEDFEIGNCLIEN_PATH) + ConstVal.DEGRADEDFEIGNCLIEN_NAME);
+        outputFiles.put(ConstVal.APICONTROLLER, pathInfo.get(ConstVal.APICONTROLLER_PATH) + ConstVal.APICONTROLLER_NAME);
     }
 
     /**
@@ -217,6 +220,9 @@ public class GenerateMojo extends AbstractGenerateMojo {
             String serviceFile = String.format(outputFiles.get(ConstVal.SERIVCE), entityName);
             String implFile = String.format(outputFiles.get(ConstVal.SERVICEIMPL), entityName);
             String controllerFile = String.format(outputFiles.get(ConstVal.CONTROLLER), entityName);
+            String feignFile = String.format(outputFiles.get(ConstVal.FEIGNCLIENT), entityName);
+            String degradedFeignClienFile = String.format(outputFiles.get(ConstVal.DEGRADEDFEIGNCLIEN), entityName);
+            String apiControllerFile = String.format(outputFiles.get(ConstVal.APICONTROLLER), entityName);
 
             TemplateConfig template = config.getTemplate();
 
@@ -255,6 +261,18 @@ public class GenerateMojo extends AbstractGenerateMojo {
             }
             if (isCreate(controllerFile)) {
                 vmToFile(context, template.getController(), controllerFile);
+            }
+
+            if (isCreate(feignFile)) {
+                vmToFile(context, template.getFeignClient(), feignFile);
+            }
+
+            if (isCreate(degradedFeignClienFile)) {
+                vmToFile(context, template.getDegradedFeignClien(), degradedFeignClienFile);
+            }
+
+            if (isCreate(apiControllerFile)) {
+                vmToFile(context, template.getApiController(), apiControllerFile);
             }
 
         } catch (IOException e) {

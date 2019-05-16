@@ -1,0 +1,62 @@
+
+
+
+@RestController
+@RequestMapping("soa/applicationTypeApiController")
+public class ApplicationTypeApiController extends BaseApiController {
+
+    private final ApplicationTypeService applicationTypeService;
+
+    @Autowired
+    public ApplicationTypeApiController(ApplicationTypeService applicationTypeService) {
+        this.applicationTypeService = applicationTypeService;
+    }
+
+
+    @PostMapping("findApplicationTypeList")
+    public PageInfo<ApplicationTypeVo> findApplicationTypeList(@RequestBody ApplicationTypeVo applicationTypeVo){
+        Page<ApplicationTypeVo> page = applicationTypeService.findApplicationTypeList(applicationTypeVo);
+        PageInfo<ApplicationTypeVo> pageInfo = new PageInfo<>(page);
+        return pageInfo;
+    }
+
+    @PostMapping("save")
+    public AjaxJson save(@RequestBody ApplicationTypeVo applicationTypeVo){
+        AjaxJson aj = new AjaxJson();
+        try{
+            applicationTypeService.save(applicationTypeVo);
+        }catch(Exception e){
+            e.printStackTrace();
+            aj.setFailedMsg(e.getMessage());
+        }
+        return aj;
+    }
+
+    @GetMapping("getApplicationTypeById")
+    public ApplicationTypeVo getApplicationTypeById(@RequestParam("id") String id){
+        return applicationTypeService.getApplicationTypeById(id);
+    }
+
+    @GetMapping("del")
+    public AjaxJson del(@RequestParam("id") String id){
+        AjaxJson aj = new AjaxJson();
+        try{
+            applicationTypeService.del(id);
+        }catch(Exception e){
+            e.printStackTrace();
+            aj.setFailedMsg(e.getMessage());
+        }
+
+        return aj;
+    }
+
+    /**
+     * 查询应用列表，不分页
+     * @return 应用列表
+     */
+    @PostMapping("applicationTypeTreeGrid")
+    public List<ApplicationTypeVo> applicationTypeTreeGrid() {
+        return applicationTypeService.applicationTypeTreeGrid();
+    }
+
+}
