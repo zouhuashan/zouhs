@@ -1,0 +1,36 @@
+
+
+/**
+ * 服务应用类型feign
+ * @author wan
+ */
+@FeignClient(qualifier = "applicationTypeFeignClient", name = "service-sso-auth", fallback = ApplicationTypeDegradedFeignClient.class)
+public interface ApplicationTypeFeignClient {
+
+    /**
+     * 查询-首页列表
+     */
+    @PostMapping("soa/applicationTypeApiController/findApplicationTypeList")
+    public PageInfo<ApplicationTypeVo> findApplicationTypeList(@RequestBody ApplicationTypeVo applicationTypeVo);
+
+    @PostMapping("soa/applicationTypeApiController/applicationTypeTreeGrid")
+    List<ApplicationTypeVo> applicationTypeTreeGrid();
+    /**
+     * 保存
+     */
+    @PostMapping("soa/applicationTypeApiController/save")
+    public AjaxJson save(@RequestBody ApplicationTypeVo applicationTypeVo);
+
+    /**
+     * 根据Id查询当前数据
+     */
+    @GetMapping("soa/applicationTypeApiController/getApplicationTypeById")
+    public ApplicationTypeVo getApplicationTypeById(@RequestParam("id") String id);
+
+    /**
+     * 删除
+     */
+    @GetMapping("soa/applicationTypeApiController/del")
+    public AjaxJson del(@RequestParam("id") String id);
+
+}
