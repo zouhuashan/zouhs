@@ -1,25 +1,25 @@
 
 
 @Component
-public class ApplicationTypeDegradedFeignClient implements ApplicationTypeFeignClient{
+public class ${table.feignClientName} implements ${table.feignClientName}{
 
     @Override
-    public PageInfo<ApplicationTypeVo> findApplicationTypeList(ApplicationTypeVo applicationTypeVo) {
-        return new PageInfo<ApplicationTypeVo>();
+    public PageInfo<${table.entityName}Vo> find${table.entityName}List(${table.entityName}Vo ${table.entityNameVO}Vo) {
+        return new PageInfo<${table.entityName}Vo>();
     }
 
     @Override
-    public List<ApplicationTypeVo> applicationTypeTreeGrid() {
+    public List<${table.entityName}Vo> ${table.entityNameVO}TreeGrid() {
         return null;
     }
 
     @Override
-    public AjaxJson save(ApplicationTypeVo applicationTypeVo) {
+    public AjaxJson save(${table.entityName}Vo ${table.entityNameVO}Vo) {
         return new AjaxJson(false,"操作失败");
     }
 
     @Override
-    public ApplicationTypeVo getApplicationTypeById(String id) {
+    public ${table.entityName}Vo get${table.entityName}ById(String id) {
         return null;
     }
 

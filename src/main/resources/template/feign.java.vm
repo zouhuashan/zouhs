@@ -4,33 +4,33 @@
  * 服务应用类型feign
  * @author wan
  */
-@FeignClient(qualifier = "applicationTypeFeignClient", name = "service-sso-auth", fallback = ApplicationTypeDegradedFeignClient.class)
-public interface ApplicationTypeFeignClient {
+@FeignClient(qualifier = "${table.serviceNameInfeignClientName}", name = "service-sso-auth", fallback = ${table.feignClientName}.class)
+public interface ${table.feignClientName} {
 
     /**
      * 查询-首页列表
      */
-    @PostMapping("soa/applicationTypeApiController/findApplicationTypeList")
-    public PageInfo<ApplicationTypeVo> findApplicationTypeList(@RequestBody ApplicationTypeVo applicationTypeVo);
+    @PostMapping("soa/${table.serviceNameInapiControllerName}/find${table.entityName}List")
+    public PageInfo<${table.entityName}Vo> find${table.entityName}List(@RequestBody ${table.entityName}Vo ${table.entityNameVO}Vo);
 
-    @PostMapping("soa/applicationTypeApiController/applicationTypeTreeGrid")
-    List<ApplicationTypeVo> applicationTypeTreeGrid();
+    @PostMapping("soa/${table.serviceNameInapiControllerName}/${table.entityNameVO}TreeGrid")
+    List<${table.entityName}Vo> ${table.entityNameVO}TreeGrid();
     /**
      * 保存
      */
-    @PostMapping("soa/applicationTypeApiController/save")
-    public AjaxJson save(@RequestBody ApplicationTypeVo applicationTypeVo);
+    @PostMapping("soa/${table.serviceNameInapiControllerName}/save")
+    public AjaxJson save(@RequestBody ${table.entityName}Vo ${table.entityNameVO}Vo);
 
     /**
      * 根据Id查询当前数据
      */
-    @GetMapping("soa/applicationTypeApiController/getApplicationTypeById")
-    public ApplicationTypeVo getApplicationTypeById(@RequestParam("id") String id);
+    @GetMapping("soa/${table.serviceNameInapiControllerName}/get${table.entityName}ById")
+    public ${table.entityName}Vo get${table.entityName}ById(@RequestParam("id") String id);
 
     /**
      * 删除
      */
-    @GetMapping("soa/applicationTypeApiController/del")
+    @GetMapping("soa/${table.serviceNameInapiControllerName}/del")
     public AjaxJson del(@RequestParam("id") String id);
 
 }

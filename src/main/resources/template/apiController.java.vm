@@ -2,29 +2,29 @@
 
 
 @RestController
-@RequestMapping("soa/applicationTypeApiController")
-public class ApplicationTypeApiController extends BaseApiController {
+@RequestMapping("soa/${table.serviceNameInapiControllerName}")
+public class ${table.apiControllerName} extends BaseApiController {
 
-    private final ApplicationTypeService applicationTypeService;
+    private final ${table.entityName}Service ${table.entityNameVO}Service;
 
     @Autowired
-    public ApplicationTypeApiController(ApplicationTypeService applicationTypeService) {
-        this.applicationTypeService = applicationTypeService;
+    public ${table.apiControllerName}(${table.entityName}Service ${table.entityNameVO}Service) {
+        this.${table.entityNameVO}Service = ${table.entityNameVO}Service;
     }
 
 
-    @PostMapping("findApplicationTypeList")
-    public PageInfo<ApplicationTypeVo> findApplicationTypeList(@RequestBody ApplicationTypeVo applicationTypeVo){
-        Page<ApplicationTypeVo> page = applicationTypeService.findApplicationTypeList(applicationTypeVo);
-        PageInfo<ApplicationTypeVo> pageInfo = new PageInfo<>(page);
+    @PostMapping("find${table.entityName}List")
+    public PageInfo<${table.entityName}Vo> find${table.entityName}List(@RequestBody ${table.entityName}Vo ${table.entityNameVO}Vo){
+        Page${table.entityName}Vo> page = ${table.entityNameVO}Service.find${table.entityName}List(${table.entityNameVO}Vo);
+        PageInfo<${table.entityName}Vo> pageInfo = new PageInfo<>(page);
         return pageInfo;
     }
 
     @PostMapping("save")
-    public AjaxJson save(@RequestBody ApplicationTypeVo applicationTypeVo){
+    public AjaxJson save(@RequestBody ${table.entityName}Vo ${table.entityNameVO}Vo){
         AjaxJson aj = new AjaxJson();
         try{
-            applicationTypeService.save(applicationTypeVo);
+            ${table.entityNameVO}Service.save(${table.entityNameVO}Vo);
         }catch(Exception e){
             e.printStackTrace();
             aj.setFailedMsg(e.getMessage());
@@ -32,16 +32,16 @@ public class ApplicationTypeApiController extends BaseApiController {
         return aj;
     }
 
-    @GetMapping("getApplicationTypeById")
-    public ApplicationTypeVo getApplicationTypeById(@RequestParam("id") String id){
-        return applicationTypeService.getApplicationTypeById(id);
+    @GetMapping("get${table.entityName}ById")
+    public ${table.entityName}Vo get${table.entityName}ById(@RequestParam("id") String id){
+        return ${table.entityNameVO}Service.get${table.entityName}ById(id);
     }
 
     @GetMapping("del")
     public AjaxJson del(@RequestParam("id") String id){
         AjaxJson aj = new AjaxJson();
         try{
-            applicationTypeService.del(id);
+            ${table.entityNameVO}Service.del(id);
         }catch(Exception e){
             e.printStackTrace();
             aj.setFailedMsg(e.getMessage());
@@ -54,9 +54,9 @@ public class ApplicationTypeApiController extends BaseApiController {
      * 查询应用列表，不分页
      * @return 应用列表
      */
-    @PostMapping("applicationTypeTreeGrid")
-    public List<ApplicationTypeVo> applicationTypeTreeGrid() {
-        return applicationTypeService.applicationTypeTreeGrid();
+    @PostMapping("${table.entityNameVO}TreeGrid")
+    public List<${table.entityName}Vo> ${table.entityNameVO}TreeGrid() {
+        return ${table.entityNameVO}Service.${table.entityNameVO}TreeGrid();
     }
 
 }
